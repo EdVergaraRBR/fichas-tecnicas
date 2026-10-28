@@ -1,0 +1,8 @@
+~$*
+*.tmp
+Thumbs.db
+Desktop.ini
+
+# Planillas de la carpeta que no forman parte de este sitio
+Actividad Costo MPD - Semana 4.xlsx
+COSTOS CHILENITOS - ENPOLVADOS.xlsx
