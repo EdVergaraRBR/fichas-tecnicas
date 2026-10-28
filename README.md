@@ -6,17 +6,21 @@ La primera ficha es el **queque** tomado de `fichas tecnicas.xlsx`. Las cantidad
 
 ## Cómo verla
 
-Abre `index.html` en el navegador, o entra a https://edvergararbr.github.io/fichas-tecnicas/
+En esta PC, deja corriendo el servidor local y abre http://127.0.0.1:8080/
+
+```bash
+py -3.14 servidor.py
+```
+
+La copia publicada sigue en https://edvergararbr.github.io/fichas-tecnicas/
 
 ## Cómo agregar una receta
 
-1. Entra a **Nueva receta**.
-2. Completa los datos, el paso a paso de cada etapa y las cantidades A–E.
-3. Pulsa **Guardar ficha**. Queda guardada en ese navegador.
-4. Pulsa **Descargar fichas** y reemplaza `js/datos.js` con el archivo descargado.
-5. Guarda ese cambio en el repositorio para que la receta quede para todos.
+1. Abre la página con el servidor local, no como archivo suelto.
+2. Entra a **Nueva receta** y completa los datos, el paso a paso y las cantidades A–E.
+3. Pulsa **Guardar y subir**.
 
-También puedes editar `js/datos.js` a mano. Cada receta repite la misma estructura del queque.
+Eso reescribe `js/datos.js`, crea el commit y lo sube a GitHub. Eliminar una ficha hace lo mismo. En la página publicada el guardado solo queda en ese navegador, porque desde ahí no se puede usar la sesión de Git de esta PC.
 
 ## Costos
 

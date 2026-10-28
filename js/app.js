@@ -15,7 +15,9 @@
     borrador: null,
     sucio: false,
     toast: "",
-    scrollA: null
+    scrollA: null,
+    conGit: false,
+    guardando: false
   };
 
   const app = document.getElementById("app");
@@ -100,6 +102,51 @@
   function guardarLocal() {
     localStorage.setItem(CLAVE, JSON.stringify(state.recetas));
     state.personalizadas = true;
+  }
+
+  async function detectarGit() {
+    try {
+      const respuesta = await fetch("/api/estado", { cache: "no-store" });
+      if (!respuesta.ok) return;
+      const dato = await respuesta.json();
+      if (!dato.git) return;
+      state.conGit = true;
+      if (!state.sucio) pintar();
+    } catch (error) {
+      state.conGit = false;
+    }
+  }
+
+  async function publicarEnGit(mensaje) {
+    const respuesta = await fetch("/api/recetas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recetas: state.recetas, mensaje: mensaje })
+    });
+    const dato = await respuesta.json().catch(() => ({}));
+    if (!respuesta.ok || !dato.ok) {
+      throw new Error(dato.detalle || "No se pudo subir al repositorio.");
+    }
+    if (dato.subido) {
+      localStorage.removeItem(CLAVE);
+      state.personalizadas = false;
+    }
+    return dato;
+  }
+
+  async function guardarEnGit(mensaje, avisoLocal) {
+    if (!state.conGit) {
+      mostrarToast(avisoLocal);
+      return;
+    }
+    try {
+      const resultado = await publicarEnGit(mensaje);
+      if (resultado.sinCambios) mostrarToast("Esa ficha ya estaba en el repositorio.");
+      else if (resultado.subido) mostrarToast("Listo. El cambio quedó en GitHub.");
+      else mostrarToast(resultado.detalle || "Quedó guardado en Git en esta PC, pero no se pudo subir.");
+    } catch (error) {
+      mostrarToast(error.message || "No se pudo subir al repositorio. El cambio sigue en este navegador.");
+    }
   }
 
   function recetaActual() {
@@ -286,8 +333,9 @@
     state.sucio = true;
   }
 
-  function guardarFicha(evento) {
+  async function guardarFicha(evento) {
     evento.preventDefault();
+    if (state.guardando) return;
     const borrador = leerFormulario();
     if (!borrador.nombre) {
       mostrarToast("La ficha necesita un nombre.");
@@ -309,18 +357,26 @@
     guardarLocal();
     state.sucio = false;
     state.recetaId = normal.id;
-    mostrarToast("Ficha guardada en este navegador.");
+    state.guardando = true;
+    const accion = anterior ? "Actualizar" : "Agregar";
+    await guardarEnGit(accion + " la ficha de " + normal.nombre + ".", "Ficha guardada en este navegador.");
+    state.guardando = false;
     ir("#/r/" + encodeURIComponent(normal.id));
   }
 
-  function eliminarFicha() {
+  async function eliminarFicha() {
     const receta = recetaActual();
-    if (!receta) return;
-    if (!confirm("¿Eliminar la ficha «" + receta.nombre + "» de este navegador?")) return;
+    if (!receta || state.guardando) return;
+    const pregunta = state.conGit
+      ? "¿Eliminar la ficha «" + receta.nombre + "»? También se quitará del repositorio."
+      : "¿Eliminar la ficha «" + receta.nombre + "» de este navegador?";
+    if (!confirm(pregunta)) return;
     state.recetas = state.recetas.filter((item) => item.id !== receta.id);
     guardarLocal();
     state.sucio = false;
-    mostrarToast("Ficha eliminada de este navegador.");
+    state.guardando = true;
+    await guardarEnGit("Eliminar la ficha de " + receta.nombre + ".", "Ficha eliminada de este navegador.");
+    state.guardando = false;
     ir("#/");
   }
 
@@ -370,8 +426,7 @@
         state.recetas = lista.map(normalizar);
         guardarLocal();
         state.sucio = false;
-        mostrarToast("Recetas importadas en este navegador.");
-        ir("#/");
+        guardarEnGit("Importar fichas.", "Recetas importadas en este navegador.").then(() => ir("#/"));
       } catch (error) {
         mostrarToast("No pude leer ese archivo.");
       }
@@ -425,13 +480,17 @@
     });
     return el("main", {}, [
       state.personalizadas ? el("div", { class: "banner no-print" }, [
-        el("span", { text: "Estás viendo las fichas guardadas en este navegador. Descarga datos.js y reemplázalo en el repositorio para no perderlas." }),
-        el("button", { class: "btn fantasma", type: "button", onclick: restaurarOriginales, text: "Volver a las del repositorio" })
+        el("span", { text: state.conGit
+          ? "Hay cambios solo en este navegador. Vuelve a guardar la ficha para subirlos a GitHub."
+          : "Estás viendo las fichas guardadas en este navegador. Descarga datos.js y reemplázalo en el repositorio para no perderlas." }),
+        state.conGit ? null : el("button", { class: "btn fantasma", type: "button", onclick: restaurarOriginales, text: "Volver a las del repositorio" })
       ]) : null,
       el("div", { class: "catalogo-top" }, [
         el("div", {}, [
           el("h2", { text: "Recetario" }),
-          el("p", { text: "Cada ficha ordena los ingredientes en las etapas A, B, C, D y E. El paso a paso de la preparación vive en esa misma etapa, junto a las cantidades que se usan." })
+          el("p", { text: state.conGit
+            ? "Al guardar o eliminar una ficha, el cambio se confirma en Git y se sube a GitHub."
+            : "Cada ficha ordena los ingredientes en las etapas A, B, C, D y E. En esta dirección los cambios quedan en el navegador." })
         ])
       ]),
       el("div", { class: "herramientas no-print" }, [
@@ -736,7 +795,7 @@
           ]),
           el("div", { class: "grupo-botones" }, [
             el("button", { class: "btn secundario", type: "button", text: "Descargar", onclick: descargar }),
-            el("button", { class: "btn", type: "submit", text: "Guardar ficha" })
+            el("button", { class: "btn", type: "submit", disabled: state.guardando, text: state.guardando ? "Subiendo…" : (state.conGit ? "Guardar y subir" : "Guardar ficha") })
           ])
         ])
       ])
@@ -789,4 +848,5 @@
   if (!location.hash) location.hash = "#/";
   aplicarRuta();
   pintar();
+  detectarGit();
 })();

@@ -2,6 +2,8 @@
 *.tmp
 Thumbs.db
 Desktop.ini
+__pycache__/
+*.pyc
 
 # Planillas de la carpeta que no forman parte de este sitio
 Actividad Costo MPD - Semana 4.xlsx
