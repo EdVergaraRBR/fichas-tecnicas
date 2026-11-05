@@ -52,17 +52,11 @@ a { color: inherit; }
 
 .marca { display: flex; gap: 0.85rem; align-items: center; text-decoration: none; }
 
-.sello {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: var(--terra);
-  color: #f8ead8;
-  font-family: var(--serif);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+.logo {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  flex: none;
 }
 
 .marca h1 {
@@ -127,6 +121,15 @@ a { color: inherit; }
 
 .catalogo-top p { margin: 0.35rem 0 0; color: var(--muted); max-width: 46rem; }
 
+.adorno {
+  width: 220px;
+  max-width: 38vw;
+  height: auto;
+  flex: none;
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 14px 18px rgba(80, 40, 20, 0.14));
+}
+
 .herramientas { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.2rem 0 1rem; }
 
 .buscar, .campo input, .campo select, .campo textarea {
@@ -171,6 +174,32 @@ a { color: inherit; }
 }
 
 .tarjeta:hover { border-color: #d7b89a; }
+
+.tarjeta-ilustracion {
+  width: calc(100% + 2.2rem);
+  height: 168px;
+  margin: -1.1rem -1.1rem 0.15rem;
+  object-fit: contain;
+  pointer-events: none;
+  background:
+    radial-gradient(140px 80px at 72% 78%, rgba(176, 140, 196, 0.22), transparent 72%),
+    linear-gradient(180deg, #f6eadc 0%, #fffdf9 100%);
+}
+
+.ficha-titulo {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  min-width: 0;
+}
+
+.ficha-ilustracion {
+  width: 156px;
+  height: 156px;
+  object-fit: contain;
+  flex: none;
+  filter: drop-shadow(0 12px 16px rgba(80, 40, 20, 0.12));
+}
 
 .tarjeta .categoria {
   color: var(--terra);
@@ -469,6 +498,9 @@ ol.pasos-lista li { margin: 0.35rem 0; }
   .ing-editor { grid-template-columns: 1fr 1fr; }
   .ing-head { display: none; }
   .marca h1 { font-size: 1.35rem; }
+  .logo { width: 64px; height: 64px; }
+  .adorno { align-self: center; transform: none; width: 180px; }
+  .ficha-titulo { flex-direction: column; align-items: flex-start; }
 }
 
 @media print {
@@ -477,6 +509,8 @@ ol.pasos-lista li { margin: 0.35rem 0; }
   .app { width: auto; }
   .panel { box-shadow: none; }
   .layout { display: block; }
+  .adorno { display: none; }
+  .ficha-ilustracion, .tarjeta-ilustracion { filter: none; }
   .costos, .pasos, .bloque { break-inside: avoid; }
   tr.fuera { display: table-row; }
 }

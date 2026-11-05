@@ -448,13 +448,22 @@
     }
   }
 
+  function ilustracion(receta) {
+    const id = String(receta.id || "").toLowerCase();
+    const nombre = String(receta.nombre || "").toLowerCase();
+    if (id === "queque" || nombre.includes("queque")) {
+      return { src: "img/muffin.png", alt: "Muffin de queque" };
+    }
+    return null;
+  }
+
   function cabecera() {
     return el("header", { class: "cabecera" }, [
       el("a", { class: "marca", href: "#/", onclick: (evento) => { evento.preventDefault(); ir("#/"); } }, [
-        el("span", { class: "sello", text: "Ft" }),
+        el("img", { class: "logo", src: "img/logo.png", alt: "Repostería Margarita" }),
         el("div", {}, [
           el("h1", { text: "Fichas técnicas" }),
-          el("p", { text: "Recetas, costos y preparación por etapas" })
+          el("p", { text: "Repostería Margarita" })
         ])
       ]),
       el("div", { class: "acciones no-print" }, [
@@ -491,7 +500,8 @@
           el("p", { text: state.conGit
             ? "Al guardar o eliminar una ficha, el cambio se confirma en Git y se sube a GitHub."
             : "Cada ficha ordena los ingredientes en las etapas A, B, C, D y E. En esta dirección los cambios quedan en el navegador." })
-        ])
+        ]),
+        el("img", { class: "adorno", src: "img/cheesecake.png", alt: "Cheesecake de maracuyá" })
       ]),
       el("div", { class: "herramientas no-print" }, [
         el("input", {
@@ -518,7 +528,9 @@
   function tarjeta(receta) {
     const costos = window.Costos.calcularReceta(receta);
     const usadas = etapasUsadas(receta);
+    const dibujo = ilustracion(receta);
     return el("button", { class: "tarjeta", type: "button", onclick: () => ir("#/r/" + encodeURIComponent(receta.id)) }, [
+      dibujo ? el("img", { class: "tarjeta-ilustracion", src: dibujo.src, alt: dibujo.alt }) : null,
       el("div", {}, [
         el("div", { class: "categoria", text: receta.categoria }),
         el("h3", { text: receta.nombre })
@@ -540,13 +552,17 @@
     if (!receta) return el("p", { text: "No encontré esa ficha." });
     const costos = window.Costos.calcularReceta(receta);
     const etapaActiva = state.etapa;
+    const dibujo = ilustracion(receta);
     return el("main", {}, [
       el("div", { class: "ficha-head" }, [
-        el("div", {}, [
-          el("button", { class: "volver no-print", type: "button", onclick: () => ir("#/"), text: "← Recetario" }),
-          el("p", { class: "kicker", text: receta.categoria + (receta.codigo ? " · " + receta.codigo : "") }),
-          el("h2", { text: receta.nombre }),
-          el("p", { class: "bajada", text: receta.descripcion || "Las cantidades A–E son las etapas de la preparación." })
+        el("div", { class: "ficha-titulo" }, [
+          el("div", {}, [
+            el("button", { class: "volver no-print", type: "button", onclick: () => ir("#/"), text: "← Recetario" }),
+            el("p", { class: "kicker", text: receta.categoria + (receta.codigo ? " · " + receta.codigo : "") }),
+            el("h2", { text: receta.nombre }),
+            el("p", { class: "bajada", text: receta.descripcion || "Las cantidades A–E son las etapas de la preparación." })
+          ]),
+          dibujo ? el("img", { class: "ficha-ilustracion", src: dibujo.src, alt: dibujo.alt }) : null
         ]),
         el("div", { class: "acciones no-print" }, [
           el("button", { class: "btn secundario", type: "button", onclick: () => window.print(), text: "Imprimir" }),
