@@ -9,11 +9,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DATOS = ROOT / "js" / "datos.js"
+PRECIOS = ROOT / "js" / "precios.js"
 PUERTO = 8080
 CANDADO = threading.Lock()
 ENCABEZADO = (
     "// Recetas del sitio. Al guardar una ficha con el servidor local,\n"
     "// este archivo se actualiza, se confirma en Git y se sube a GitHub.\n"
+)
+ENCABEZADO_PRECIOS = (
+    "// Lista compartida de costos. El mismo producto y la misma unidad\n"
+    "// valen para todas las recetas. null significa que falta el precio.\n"
 )
 
 
@@ -34,6 +39,25 @@ def leer_recetas():
 def escribir(recetas):
     cuerpo = json.dumps(recetas, ensure_ascii=False, indent=2)
     DATOS.write_text(ENCABEZADO + "window.RECETAS_INICIALES = " + cuerpo + ";\n", encoding="utf-8", newline="\n")
+
+
+def leer_precios():
+    if not PRECIOS.exists():
+        return []
+    texto = PRECIOS.read_text(encoding="utf-8")
+    marca = "window.PRECIOS ="
+    if marca not in texto:
+        return []
+    inicio = texto.index(marca) + len(marca)
+    datos, _ = json.JSONDecoder().raw_decode(texto[inicio:].lstrip())
+    if not isinstance(datos, list):
+        raise ValueError("js/precios.js no contiene una lista de precios.")
+    return datos
+
+
+def escribir_precios(precios):
+    cuerpo = json.dumps(precios, ensure_ascii=False, indent=2)
+    PRECIOS.write_text(ENCABEZADO_PRECIOS + "window.PRECIOS = " + cuerpo + ";\n", encoding="utf-8", newline="\n")
 
 
 def git(*argumentos, timeout=60):
@@ -89,16 +113,41 @@ def subir():
     return {"ok": True, "subido": True}
 
 
-def publicar(recetas, mensaje):
+def validar_precios(precios):
+    if not isinstance(precios, list) or len(precios) > 2000:
+        raise ValueError("La lista de costos no es válida.")
+    for producto in precios:
+        if not isinstance(producto, dict) or not str(producto.get("nombre") or "").strip():
+            raise ValueError("Cada producto necesita un nombre.")
+        precio = producto.get("precioUnidad", None)
+        if precio is None:
+            continue
+        if isinstance(precio, bool) or not isinstance(precio, (int, float)):
+            raise ValueError("El precio debe ser un número o quedar vacío.")
+        if precio != precio or precio in (float("inf"), float("-inf")) or precio < 0:
+            raise ValueError("El precio no es un número válido.")
+
+
+def publicar(recetas, mensaje, precios=None):
     validar(recetas)
-    if canon(leer_recetas()) == canon(recetas):
+    if precios is not None:
+        validar_precios(precios)
+    recetas_iguales = canon(leer_recetas()) == canon(recetas)
+    precios_iguales = precios is None or canon(leer_precios()) == canon(precios)
+    if recetas_iguales and precios_iguales:
         if not adelantada():
             return {"ok": True, "sinCambios": True, "subido": True}
         resultado = subir()
         resultado["sinCambios"] = resultado["subido"]
         return resultado
-    escribir(recetas)
-    agregado = git("add", "--", "js/datos.js")
+    archivos = []
+    if not recetas_iguales:
+        escribir(recetas)
+        archivos.append("js/datos.js")
+    if precios is not None and not precios_iguales:
+        escribir_precios(precios)
+        archivos.append("js/precios.js")
+    agregado = git("add", "--", *archivos)
     if agregado.returncode != 0:
         raise RuntimeError((agregado.stderr or agregado.stdout or "No se pudo preparar el archivo.").strip())
     diferencias = git("diff", "--cached", "--quiet")
@@ -144,7 +193,7 @@ class FichasHandler(SimpleHTTPRequestHandler):
                 self.responder(400, {"ok": False, "detalle": "El envío no es válido."})
                 return
             cuerpo = json.loads(self.rfile.read(largo).decode("utf-8"))
-            resultado = publicar(cuerpo.get("recetas"), cuerpo.get("mensaje"))
+            resultado = publicar(cuerpo.get("recetas"), cuerpo.get("mensaje"), cuerpo.get("precios"))
             self.responder(200, resultado)
         except (ValueError, json.JSONDecodeError) as error:
             self.responder(400, {"ok": False, "detalle": str(error)})
