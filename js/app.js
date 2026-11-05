@@ -875,8 +875,8 @@
       el("section", { class: "datos" }, [
         dato("Tiempo de preparación", tiempoTexto(original)),
         controlPorciones(original, escala.pax, escala.base),
-        dato("Costo porción MP", dinero(costos.costoPorcion)),
-        dato("Precio bruto / pax", dinero(costos.precioBrutoPorcion))
+        dato("Precio bruto / pax", dinero(costos.precioBrutoPorcion)),
+        dato("Venta unitaria", dinero(costos.ventaUnitaria), "venta-unitaria-top")
       ]),
       el("div", { class: "etapas no-print" }, [
         el("button", {
@@ -934,10 +934,10 @@
     ]);
   }
 
-  function dato(etiqueta, valor) {
+  function dato(etiqueta, valor, id) {
     return el("article", { class: "panel dato" }, [
       el("span", { text: etiqueta }),
-      el("strong", { text: valor })
+      el("strong", { id: id || null, text: valor })
     ]);
   }
 
@@ -993,12 +993,8 @@
             el("tr", {}, [
               el("th", { class: "nombre", text: "Producto" }),
               el("th", { text: state.medida === "estandar" ? "Estandarizada" : "De la receta" }),
-              el("th", { text: "U/M" }),
-              el("th", { class: "num", text: "$ U/M" }),
               ...ETAPAS.map((id) => el("th", { class: "num col-" + id + (etapaActiva === id ? " foco-" + id : ""), text: id })),
-              el("th", { class: "num", text: "Total" }),
-              el("th", { class: "num", text: "Costo" }),
-              el("th", { class: "num", text: "Porción" })
+              el("th", { class: "num", text: "Total" })
             ])
           ]),
           el("tbody", {}, costos.ingredientes.map((ingrediente) => {
@@ -1006,15 +1002,11 @@
             return el("tr", { class: visible ? "" : "fuera" }, [
               el("td", { class: "nombre", text: ingrediente.nombre || "Sin nombre" }),
               el("td", { text: medidaVisible(ingrediente) }),
-              el("td", { text: ingrediente.unidad || "" }),
-              el("td", { class: "num", text: ingrediente.precio == null ? "—" : dinero(ingrediente.precio) }),
               ...ETAPAS.map((id) => el("td", {
                 class: "num col-" + id + (etapaActiva === id ? " foco-" + id : ""),
                 text: cantidad(ingrediente.cantidades[id])
               })),
-              el("td", { class: "num", text: cantidad(ingrediente.total) || "—" }),
-              el("td", { class: "num", text: dinero(ingrediente.costoTotal) }),
-              el("td", { class: "num", text: dinero(ingrediente.costoPorcion) })
+              el("td", { class: "num", text: cantidad(ingrediente.total) || "—" })
             ]);
           }))
         ])
@@ -1025,45 +1017,91 @@
       el("p", { class: "pista", text: (state.factor !== 1
         ? "Ajustado de " + state.paxBase + " a " + state.paxVista + " porciones. "
         : "") + (state.medida === "estandar"
-        ? "Viendo la cantidad estandarizada, en gramos o mililitros. El costo usa la unidad de precio: kilos, litros o unidades."
-        : "Viendo la cantidad de la receta, en tazas, cucharadas, cucharaditas o pizcas. El costo usa la unidad de precio: kilos, litros o unidades.") }),
+        ? "Viendo la cantidad estandarizada, en gramos o mililitros."
+        : "Viendo la cantidad de la receta, en tazas, cucharadas, cucharaditas o pizcas.") }),
       receta.notaMedidas ? el("p", { class: "pista", text: receta.notaMedidas }) : null
     ]);
   }
 
+  function filaCosto(etiqueta, valor, destacada, id) {
+    return el("div", { class: "fila-costo" + (destacada ? " total" : "") }, [
+      el("span", { text: etiqueta }),
+      el(destacada ? "strong" : "b", { id: id || null, text: valor })
+    ]);
+  }
+
+  function cambiarGanancia(evento) {
+    const original = recetaActual();
+    if (!original) return;
+    const texto = evento.target.value.trim().replace(",", ".");
+    if (texto === "") original.porcentajeGanancia = null;
+    else {
+      const numero = Number(texto);
+      if (!Number.isFinite(numero) || numero < 0) return;
+      original.porcentajeGanancia = numero / 100;
+    }
+    guardarLocal();
+    const costos = window.Costos.calcularReceta(aplicarPorciones(original).receta);
+    const venta = document.getElementById("venta-total");
+    const unitaria = document.getElementById("venta-unitaria");
+    const arriba = document.getElementById("venta-unitaria-top");
+    const nota = document.getElementById("nota-ganancia");
+    if (venta) venta.textContent = dinero(costos.venta);
+    if (unitaria) unitaria.textContent = dinero(costos.ventaUnitaria);
+    if (arriba) arriba.textContent = dinero(costos.ventaUnitaria);
+    if (nota) {
+      nota.textContent = original.porcentajeGanancia == null
+        ? "La venta suma 100% sobre el precio bruto. Comprando al detalle, esa porción queda bajo el precio habitual de cafetería."
+        : "La venta usa este porcentaje sobre el precio bruto.";
+    }
+  }
+
+  function guardarGanancia() {
+    const original = recetaActual();
+    if (!original || state.guardando) return;
+    state.guardando = true;
+    guardarEnGit(
+      "Actualizar la ganancia de " + original.nombre + ".",
+      "Ganancia guardada en este navegador.",
+      "Esa ganancia ya estaba en el repositorio."
+    ).then(() => { state.guardando = false; });
+  }
+
   function panelCostos(receta, costos) {
-    const filas = [
-      ["Costo de receta (MP)", dinero(costos.costoMP), false],
-      ["Make up " + porcentaje(costos.makeup), dinero(costos.costoMP * costos.makeup), false],
-      ["Subtotal", dinero(costos.subtotal), false],
-      ["IVA " + porcentaje(costos.iva), dinero(costos.montoIva), false],
-      ["Precio bruto", dinero(costos.precioBruto), true]
-    ];
-    const extra = [];
-    if (receta.precioVentaUnitario != null) extra.push(["Precio venta unitario", dinero(receta.precioVentaUnitario), false]);
-    if (costos.precioSugerido != null) extra.push(["Precio sugerido / pax", dinero(costos.precioSugerido), false]);
+    const gananciaVisible = String(Math.round(costos.ganancia * 1000) / 10);
     return el("aside", { class: "panel costos" }, [
       el("h3", { text: "Costos" }),
-      ...filas.map(([etiqueta, valor, total]) => el("div", { class: "fila-costo" + (total ? " total" : "") }, [
-        el("span", { text: etiqueta }),
-        el(total ? "strong" : "b", { text: valor })
-      ])),
+      filaCosto("Precio bruto", dinero(costos.precioBruto), true),
+      filaCosto("Precio bruto unitario", dinero(costos.precioBrutoPorcion), false),
       el("div", { class: "fila-costo" }, [
-        el("span", { text: "Costo unitario MP" }),
-        el("b", { text: dinero(costos.costoPorcion) })
+        el("span", { text: "Ganancia" }),
+        el("label", { class: "ganancia-control" }, [
+          el("input", {
+            id: "ganancia",
+            class: "ganancia",
+            type: "number",
+            min: "0",
+            step: "1",
+            inputmode: "decimal",
+            value: gananciaVisible,
+            "aria-label": "Porcentaje de ganancia",
+            oninput: cambiarGanancia,
+            onchange: guardarGanancia
+          }),
+          el("b", { text: "%" })
+        ])
       ]),
-      el("div", { class: "fila-costo" }, [
-        el("span", { text: "Precio bruto unitario" }),
-        el("b", { text: dinero(costos.precioBrutoPorcion) })
-      ]),
-      el("div", { class: "fila-costo" }, [
-        el("span", { text: "Ratio de costo" }),
-        el("b", { text: costos.ratio == null ? "—" : porcentaje(costos.ratio) })
-      ]),
-      ...extra.map(([etiqueta, valor]) => el("div", { class: "fila-costo" }, [el("span", { text: etiqueta }), el("b", { text: valor })])),
+      filaCosto("Venta", dinero(costos.venta), true, "venta-total"),
+      filaCosto("Venta unitaria", dinero(costos.ventaUnitaria), true, "venta-unitaria"),
       costos.faltanPrecios.length ? el("p", { class: "aviso", text: "Falta el precio de: " + costos.faltanPrecios.join(", ") + "." }) : null,
       receta.aporteCalorico ? el("p", { class: "pista", text: "Aporte calórico: " + receta.aporteCalorico }) : null,
-      el("p", { class: "pista", text: "El ratio es el precio bruto dividido por el costo de materias primas. El costo suma cada ingrediente con cantidad." }),
+      el("p", {
+        id: "nota-ganancia",
+        class: "pista",
+        text: costos.gananciaSugerida
+          ? "La venta suma 100% sobre el precio bruto. Comprando al detalle, esa porción queda bajo el precio habitual de cafetería."
+          : "La venta usa este porcentaje sobre el precio bruto."
+      }),
       receta.tecnicas ? nota("Técnicas", receta.tecnicas) : null,
       receta.puntosCriticos ? nota("Puntos críticos", receta.puntosCriticos) : null
     ]);

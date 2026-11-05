@@ -41,7 +41,10 @@
     const precioBruto = subtotal + montoIva;
     const minutos = (receta.etapas || []).reduce((suma, etapa) => suma + (numero(etapa.minutos) || 0), 0);
     const precioBrutoPorcion = pax ? precioBruto / pax : null;
-    const ganancia = numero(receta.porcentajeGanancia);
+    const gananciaPropia = numero(receta.porcentajeGanancia);
+    const ganancia = gananciaPropia == null ? 1 : gananciaPropia;
+    const venta = precioBruto * (1 + ganancia);
+    const ventaUnitaria = precioBrutoPorcion == null ? null : precioBrutoPorcion * (1 + ganancia);
     return {
       ingredientes,
       costoMP,
@@ -52,7 +55,11 @@
       precioBruto,
       costoPorcion: pax ? costoMP / pax : null,
       precioBrutoPorcion,
-      precioSugerido: ganancia === null || precioBrutoPorcion === null ? null : precioBrutoPorcion * (1 + ganancia),
+      ganancia,
+      gananciaSugerida: gananciaPropia == null,
+      venta,
+      ventaUnitaria,
+      precioSugerido: ventaUnitaria,
       ratio: costoMP ? precioBruto / costoMP : null,
       minutos,
       faltanPrecios: ingredientes.filter((ingrediente) => ingrediente.faltaPrecio).map((ingrediente) => ingrediente.nombre)
