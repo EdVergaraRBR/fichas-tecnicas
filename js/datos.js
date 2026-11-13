@@ -96,22 +96,22 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.24, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Huevos",
+        "nombre": "Huevo",
         "unidad": "unidad",
-        "precioUnidad": 273,
+        "precioUnidad": 277,
         "medidaReceta": "6 huevos",
         "medidaEstandar": "300 g aprox. sin cáscara",
         "presentacion": { "receta": { "cantidad": 6, "unidad": "huevo" }, "estandar": { "cantidad": 300, "unidad": "g", "aprox": true, "nota": " sin cáscara" } },
         "cantidades": { "A": 6, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Leche o yogur",
+        "nombre": "Leche",
         "unidad": "litro",
         "precioUnidad": 1150,
-        "medidaReceta": "1/2 taza",
+        "medidaReceta": "1/2 taza de leche o yogur",
         "medidaEstandar": "125 ml de leche o 125 g de yogur",
         "presentacion": {
-          "receta": { "cantidad": 0.5, "unidad": "taza" },
+          "receta": { "cantidad": 0.5, "unidad": "taza", "nota": " de leche o yogur" },
           "estandar": { "opciones": [{ "cantidad": 125, "unidad": "ml", "etiqueta": "de leche" }, { "cantidad": 125, "unidad": "g", "etiqueta": "de yogur" }] }
         },
         "cantidades": { "A": 0.125, "B": null, "C": null, "D": null, "E": null }
@@ -126,7 +126,7 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.12, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Polvo de hornear adicional",
+        "nombre": "Polvo de hornear",
         "unidad": "kilo",
         "precioUnidad": 9900,
         "medidaReceta": "1 a 2 cucharadas",
@@ -162,7 +162,7 @@ window.RECETAS_INICIALES = [
     ],
     "ingredientes": [
       {
-        "nombre": "Harina sin polvos de hornear",
+        "nombre": "Harina sin polvos",
         "unidad": "kilo",
         "precioUnidad": 1302,
         "medidaReceta": "1 2/3 taza",
@@ -171,12 +171,12 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.2, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Mantequilla fría en cubitos",
+        "nombre": "Mantequilla",
         "unidad": "kilo",
         "precioUnidad": 11910,
-        "medidaReceta": "1/2 taza",
+        "medidaReceta": "1/2 taza, fría en cubitos",
         "medidaEstandar": "100 g",
-        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza" }, "estandar": { "cantidad": 100, "unidad": "g" } },
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza", "nota": ", fría en cubitos" }, "estandar": { "cantidad": 100, "unidad": "g" } },
         "cantidades": { "A": 0.1, "B": null, "C": null, "D": null, "E": null }
       },
       {
@@ -199,12 +199,12 @@ window.RECETAS_INICIALES = [
       },
       {
         "nombre": "Sal",
-        "unidad": "pizca",
-        "precioUnidad": 0.6,
+        "unidad": "kilo",
+        "precioUnidad": 450,
         "medidaReceta": "1 pizca",
         "medidaEstandar": "1 g",
         "presentacion": { "receta": { "cantidad": 1, "unidad": "pizca" }, "estandar": { "cantidad": 1, "unidad": "g" } },
-        "cantidades": { "A": 1, "B": null, "C": null, "D": null, "E": null }
+        "cantidades": { "A": 0.001, "B": null, "C": null, "D": null, "E": null }
       },
       {
         "nombre": "Esencia de vainilla",
@@ -225,12 +225,12 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": 0.6, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Crema de leche muy fría",
+        "nombre": "Crema de leche",
         "unidad": "litro",
         "precioUnidad": 3990,
-        "medidaReceta": "4/5 taza",
+        "medidaReceta": "4/5 taza, muy fría",
         "medidaEstandar": "200 cc",
-        "presentacion": { "receta": { "cantidad": 0.8, "unidad": "taza" }, "estandar": { "cantidad": 200, "unidad": "cc" } },
+        "presentacion": { "receta": { "cantidad": 0.8, "unidad": "taza", "nota": ", muy fría" }, "estandar": { "cantidad": 200, "unidad": "cc" } },
         "cantidades": { "A": null, "B": 0.2, "C": null, "D": null, "E": null }
       },
       {
@@ -252,7 +252,7 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": 0.015, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Agua para la gelatina",
+        "nombre": "Agua",
         "unidad": "litro",
         "precioUnidad": 0,
         "medidaReceta": "1/3 taza",
@@ -288,13 +288,148 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": null, "C": 0.01, "D": null, "E": null }
       },
       {
-        "nombre": "Agua para la salsa",
+        "nombre": "Agua",
         "unidad": "litro",
         "precioUnidad": 0,
         "medidaReceta": "2/5 taza",
         "medidaEstandar": "100 cc",
         "presentacion": { "receta": { "cantidad": 0.4, "unidad": "taza" }, "estandar": { "cantidad": 100, "unidad": "cc" } },
         "cantidades": { "A": null, "B": null, "C": 0.1, "D": null, "E": null }
+      }
+    ]
+  },
+  {
+    "id": "tartaleta-durazno",
+    "nombre": "Tartaleta de durazno",
+    "descripcion": "Misma masa del cheesecake de maracuyá. La etapa A es la masa, la B la crema y la C la cobertura de durazno. Alcanza para 6 porciones.",
+    "notaMedidas": "En la masa, 1 taza de harina o de azúcar flor = 120 g y 1 taza de mantequilla = 200 g. 1 cucharadita = 5 ml, así que 10 cc de vainilla son 2 cucharaditas. La pizca de sal equivale a 1 g. El durazno es 1 tarro conservero, que drenado da 480 g.",
+    "categoria": "Postres",
+    "codigo": "",
+    "tiempoPreparacion": null,
+    "tiempoUnidad": "h",
+    "rendimientoPax": 6,
+    "aporteCalorico": "",
+    "porcentajeGanancia": null,
+    "precioVentaUnitario": null,
+    "makeup": 0.02,
+    "iva": 0.19,
+    "tecnicas": "",
+    "puntosCriticos": "",
+    "etapas": [
+      { "id": "A", "nombre": "Masa", "minutos": null, "pasos": [] },
+      { "id": "B", "nombre": "Crema", "minutos": null, "pasos": [] },
+      { "id": "C", "nombre": "Cobertura", "minutos": null, "pasos": [] },
+      { "id": "D", "nombre": "", "minutos": null, "pasos": [] },
+      { "id": "E", "nombre": "", "minutos": null, "pasos": [] }
+    ],
+    "ingredientes": [
+      {
+        "nombre": "Harina sin polvos",
+        "unidad": "kilo",
+        "precioUnidad": 1302,
+        "medidaReceta": "1 2/3 taza",
+        "medidaEstandar": "200 g",
+        "presentacion": { "receta": { "cantidad": 1.6666667, "unidad": "taza" }, "estandar": { "cantidad": 200, "unidad": "g" } },
+        "cantidades": { "A": 0.2, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Mantequilla",
+        "unidad": "kilo",
+        "precioUnidad": 11910,
+        "medidaReceta": "1/2 taza, fría en cubitos",
+        "medidaEstandar": "100 g",
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza", "nota": ", fría en cubitos" }, "estandar": { "cantidad": 100, "unidad": "g" } },
+        "cantidades": { "A": 0.1, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Azúcar flor",
+        "unidad": "kilo",
+        "precioUnidad": 2490,
+        "medidaReceta": "1/2 taza",
+        "medidaEstandar": "60 g",
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza" }, "estandar": { "cantidad": 60, "unidad": "g" } },
+        "cantidades": { "A": 0.06, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Huevo",
+        "unidad": "unidad",
+        "precioUnidad": 277,
+        "medidaReceta": "1 huevo",
+        "medidaEstandar": "1 unidad",
+        "presentacion": { "receta": { "cantidad": 1, "unidad": "huevo" }, "estandar": { "cantidad": 1, "unidad": "unidad" } },
+        "cantidades": { "A": 1, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Sal",
+        "unidad": "kilo",
+        "precioUnidad": 450,
+        "medidaReceta": "1 pizca",
+        "medidaEstandar": "1 g",
+        "presentacion": { "receta": { "cantidad": 1, "unidad": "pizca" }, "estandar": { "cantidad": 1, "unidad": "g" } },
+        "cantidades": { "A": 0.001, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Esencia de vainilla",
+        "unidad": "cucharadita",
+        "precioUnidad": 31,
+        "medidaReceta": "1/2 cucharadita (opcional)",
+        "medidaEstandar": "2,5 ml",
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "cucharadita", "nota": " (opcional)" }, "estandar": { "cantidad": 2.5, "unidad": "ml" } },
+        "cantidades": { "A": 0.5, "B": null, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Leche",
+        "unidad": "litro",
+        "precioUnidad": 1150,
+        "medidaReceta": "500 cc",
+        "medidaEstandar": "500 cc",
+        "presentacion": { "receta": { "cantidad": 500, "unidad": "cc" }, "estandar": { "cantidad": 500, "unidad": "cc" } },
+        "cantidades": { "A": null, "B": 0.5, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Maicena",
+        "unidad": "kilo",
+        "precioUnidad": 2550,
+        "medidaReceta": "50 g",
+        "medidaEstandar": "50 g",
+        "presentacion": { "receta": { "cantidad": 50, "unidad": "g" }, "estandar": { "cantidad": 50, "unidad": "g" } },
+        "cantidades": { "A": null, "B": 0.05, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Azúcar",
+        "unidad": "kilo",
+        "precioUnidad": 1276,
+        "medidaReceta": "100 g",
+        "medidaEstandar": "100 g",
+        "presentacion": { "receta": { "cantidad": 100, "unidad": "g" }, "estandar": { "cantidad": 100, "unidad": "g" } },
+        "cantidades": { "A": null, "B": 0.1, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Huevo",
+        "unidad": "unidad",
+        "precioUnidad": 277,
+        "medidaReceta": "3 yemas",
+        "medidaEstandar": "3 unidades",
+        "presentacion": { "receta": { "cantidad": 3, "unidad": "yema" }, "estandar": { "cantidad": 3, "unidad": "unidad" } },
+        "cantidades": { "A": null, "B": 3, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Esencia de vainilla",
+        "unidad": "cucharadita",
+        "precioUnidad": 31,
+        "medidaReceta": "10 cc",
+        "medidaEstandar": "10 cc",
+        "presentacion": { "receta": { "cantidad": 10, "unidad": "cc" }, "estandar": { "cantidad": 10, "unidad": "cc" } },
+        "cantidades": { "A": null, "B": 2, "C": null, "D": null, "E": null }
+      },
+      {
+        "nombre": "Durazno conservero",
+        "unidad": "tarro",
+        "precioUnidad": null,
+        "medidaReceta": "1 tarro",
+        "medidaEstandar": "480 g drenados",
+        "presentacion": { "receta": { "cantidad": 1, "unidad": "tarro" }, "estandar": { "cantidad": 480, "unidad": "g", "nota": " drenados" } },
+        "cantidades": { "A": null, "B": null, "C": 1, "D": null, "E": null }
       }
     ]
   }
