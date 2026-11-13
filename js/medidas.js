@@ -6,6 +6,8 @@
     pizca: "pizcas",
     unidad: "unidades",
     huevo: "huevos",
+    yema: "yemas",
+    tarro: "tarros",
     sobre: "sobres"
   };
 

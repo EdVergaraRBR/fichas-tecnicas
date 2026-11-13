@@ -42,6 +42,11 @@ window.PRECIOS = [
     "precioUnidad": 3990
   },
   {
+    "nombre": "Durazno conservero",
+    "unidad": "tarro",
+    "precioUnidad": null
+  },
+  {
     "nombre": "Esencia de vainilla",
     "unidad": "cucharadita",
     "precioUnidad": 31
@@ -70,6 +75,11 @@ window.PRECIOS = [
     "nombre": "Huevos",
     "unidad": "unidad",
     "precioUnidad": 273
+  },
+  {
+    "nombre": "Leche",
+    "unidad": "litro",
+    "precioUnidad": 1150
   },
   {
     "nombre": "Leche condensada",
@@ -110,5 +120,10 @@ window.PRECIOS = [
     "nombre": "Sal",
     "unidad": "pizca",
     "precioUnidad": 0.6
+  },
+  {
+    "nombre": "Yema de huevo",
+    "unidad": "unidad",
+    "precioUnidad": null
   }
 ];
