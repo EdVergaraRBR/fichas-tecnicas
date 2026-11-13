@@ -82,15 +82,7 @@
       puntosCriticos: receta.puntosCriticos || "",
       notaMedidas: receta.notaMedidas || "",
       etapas,
-      ingredientes: (receta.ingredientes || []).map((ingrediente) => ({
-        nombre: ingrediente.nombre || "",
-        unidad: ingrediente.unidad || "",
-        precioUnidad: ingrediente.precioUnidad ?? null,
-        medidaReceta: ingrediente.medidaReceta || "",
-        medidaEstandar: ingrediente.medidaEstandar || "",
-        presentacion: ingrediente.presentacion ? clonar(ingrediente.presentacion) : null,
-        cantidades: Object.fromEntries(ETAPAS.map((id) => [id, ingrediente.cantidades ? ingrediente.cantidades[id] ?? null : null]))
-      }))
+      ingredientes: (receta.ingredientes || []).map(canonizarIngrediente)
     };
   }
 
@@ -125,6 +117,37 @@
     return limpio(nombre) + "|" + limpio(unidad);
   }
 
+  // Nombres viejos del mismo material. La cantidad se convierte cuando cambia la unidad.
+  const ALIAS_PRODUCTO = {
+    "huevos|unidad": { nombre: "Huevo", unidad: "unidad" },
+    "yema de huevo|unidad": { nombre: "Huevo", unidad: "unidad" },
+    "agua para la gelatina|litro": { nombre: "Agua", unidad: "litro" },
+    "agua para la salsa|litro": { nombre: "Agua", unidad: "litro" },
+    "leche o yogur|litro": { nombre: "Leche", unidad: "litro" },
+    "mantequilla fria en cubitos|kilo": { nombre: "Mantequilla", unidad: "kilo" },
+    "crema de leche muy fria|litro": { nombre: "Crema de leche", unidad: "litro" },
+    "polvo de hornear adicional|kilo": { nombre: "Polvo de hornear", unidad: "kilo" },
+    "harina sin polvos de hornear|kilo": { nombre: "Harina sin polvos", unidad: "kilo" },
+    "sal|pizca": { nombre: "Sal", unidad: "kilo", factor: 0.001 }
+  };
+
+  function canonizarIngrediente(ingrediente) {
+    const alias = ALIAS_PRODUCTO[claveProducto(ingrediente.nombre, ingrediente.unidad)];
+    const factor = alias && alias.factor ? alias.factor : 1;
+    return {
+      nombre: alias ? alias.nombre : (ingrediente.nombre || ""),
+      unidad: alias ? alias.unidad : (ingrediente.unidad || ""),
+      precioUnidad: alias && alias.factor ? null : (ingrediente.precioUnidad ?? null),
+      medidaReceta: ingrediente.medidaReceta || "",
+      medidaEstandar: ingrediente.medidaEstandar || "",
+      presentacion: ingrediente.presentacion ? clonar(ingrediente.presentacion) : null,
+      cantidades: Object.fromEntries(ETAPAS.map((id) => {
+        const valor = ingrediente.cantidades ? ingrediente.cantidades[id] ?? null : null;
+        return [id, valor == null ? null : valor * factor];
+      }))
+    };
+  }
+
   function sincronizarPrecios() {
     const mapa = new Map();
     const tomar = (nombre, unidad, precio, forzar) => {
@@ -145,7 +168,10 @@
     if (guardados) {
       try {
         const lista = JSON.parse(guardados);
-        if (Array.isArray(lista)) lista.forEach((producto) => tomar(producto.nombre, producto.unidad, producto.precioUnidad ?? null, true));
+        if (Array.isArray(lista)) lista.forEach((producto) => {
+          if (ALIAS_PRODUCTO[claveProducto(producto.nombre, producto.unidad)]) return;
+          tomar(producto.nombre, producto.unidad, producto.precioUnidad ?? null, true);
+        });
       } catch (error) {
         console.warn("No se pudieron leer los precios guardados", error);
       }

@@ -96,22 +96,22 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.24, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Huevos",
+        "nombre": "Huevo",
         "unidad": "unidad",
-        "precioUnidad": 273,
+        "precioUnidad": 277,
         "medidaReceta": "6 huevos",
         "medidaEstandar": "300 g aprox. sin cáscara",
         "presentacion": { "receta": { "cantidad": 6, "unidad": "huevo" }, "estandar": { "cantidad": 300, "unidad": "g", "aprox": true, "nota": " sin cáscara" } },
         "cantidades": { "A": 6, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Leche o yogur",
+        "nombre": "Leche",
         "unidad": "litro",
         "precioUnidad": 1150,
-        "medidaReceta": "1/2 taza",
+        "medidaReceta": "1/2 taza de leche o yogur",
         "medidaEstandar": "125 ml de leche o 125 g de yogur",
         "presentacion": {
-          "receta": { "cantidad": 0.5, "unidad": "taza" },
+          "receta": { "cantidad": 0.5, "unidad": "taza", "nota": " de leche o yogur" },
           "estandar": { "opciones": [{ "cantidad": 125, "unidad": "ml", "etiqueta": "de leche" }, { "cantidad": 125, "unidad": "g", "etiqueta": "de yogur" }] }
         },
         "cantidades": { "A": 0.125, "B": null, "C": null, "D": null, "E": null }
@@ -126,7 +126,7 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.12, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Polvo de hornear adicional",
+        "nombre": "Polvo de hornear",
         "unidad": "kilo",
         "precioUnidad": 9900,
         "medidaReceta": "1 a 2 cucharadas",
@@ -162,7 +162,7 @@ window.RECETAS_INICIALES = [
     ],
     "ingredientes": [
       {
-        "nombre": "Harina sin polvos de hornear",
+        "nombre": "Harina sin polvos",
         "unidad": "kilo",
         "precioUnidad": 1302,
         "medidaReceta": "1 2/3 taza",
@@ -171,12 +171,12 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.2, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Mantequilla fría en cubitos",
+        "nombre": "Mantequilla",
         "unidad": "kilo",
         "precioUnidad": 11910,
-        "medidaReceta": "1/2 taza",
+        "medidaReceta": "1/2 taza, fría en cubitos",
         "medidaEstandar": "100 g",
-        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza" }, "estandar": { "cantidad": 100, "unidad": "g" } },
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza", "nota": ", fría en cubitos" }, "estandar": { "cantidad": 100, "unidad": "g" } },
         "cantidades": { "A": 0.1, "B": null, "C": null, "D": null, "E": null }
       },
       {
@@ -199,12 +199,12 @@ window.RECETAS_INICIALES = [
       },
       {
         "nombre": "Sal",
-        "unidad": "pizca",
-        "precioUnidad": 0.6,
+        "unidad": "kilo",
+        "precioUnidad": 450,
         "medidaReceta": "1 pizca",
         "medidaEstandar": "1 g",
         "presentacion": { "receta": { "cantidad": 1, "unidad": "pizca" }, "estandar": { "cantidad": 1, "unidad": "g" } },
-        "cantidades": { "A": 1, "B": null, "C": null, "D": null, "E": null }
+        "cantidades": { "A": 0.001, "B": null, "C": null, "D": null, "E": null }
       },
       {
         "nombre": "Esencia de vainilla",
@@ -225,12 +225,12 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": 0.6, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Crema de leche muy fría",
+        "nombre": "Crema de leche",
         "unidad": "litro",
         "precioUnidad": 3990,
-        "medidaReceta": "4/5 taza",
+        "medidaReceta": "4/5 taza, muy fría",
         "medidaEstandar": "200 cc",
-        "presentacion": { "receta": { "cantidad": 0.8, "unidad": "taza" }, "estandar": { "cantidad": 200, "unidad": "cc" } },
+        "presentacion": { "receta": { "cantidad": 0.8, "unidad": "taza", "nota": ", muy fría" }, "estandar": { "cantidad": 200, "unidad": "cc" } },
         "cantidades": { "A": null, "B": 0.2, "C": null, "D": null, "E": null }
       },
       {
@@ -252,7 +252,7 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": 0.015, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Agua para la gelatina",
+        "nombre": "Agua",
         "unidad": "litro",
         "precioUnidad": 0,
         "medidaReceta": "1/3 taza",
@@ -288,7 +288,7 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": null, "C": 0.01, "D": null, "E": null }
       },
       {
-        "nombre": "Agua para la salsa",
+        "nombre": "Agua",
         "unidad": "litro",
         "precioUnidad": 0,
         "medidaReceta": "2/5 taza",
@@ -324,7 +324,7 @@ window.RECETAS_INICIALES = [
     ],
     "ingredientes": [
       {
-        "nombre": "Harina sin polvos de hornear",
+        "nombre": "Harina sin polvos",
         "unidad": "kilo",
         "precioUnidad": 1302,
         "medidaReceta": "1 2/3 taza",
@@ -333,12 +333,12 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": 0.2, "B": null, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Mantequilla fría en cubitos",
+        "nombre": "Mantequilla",
         "unidad": "kilo",
         "precioUnidad": 11910,
-        "medidaReceta": "1/2 taza",
+        "medidaReceta": "1/2 taza, fría en cubitos",
         "medidaEstandar": "100 g",
-        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza" }, "estandar": { "cantidad": 100, "unidad": "g" } },
+        "presentacion": { "receta": { "cantidad": 0.5, "unidad": "taza", "nota": ", fría en cubitos" }, "estandar": { "cantidad": 100, "unidad": "g" } },
         "cantidades": { "A": 0.1, "B": null, "C": null, "D": null, "E": null }
       },
       {
@@ -361,12 +361,12 @@ window.RECETAS_INICIALES = [
       },
       {
         "nombre": "Sal",
-        "unidad": "pizca",
-        "precioUnidad": 0.6,
+        "unidad": "kilo",
+        "precioUnidad": 450,
         "medidaReceta": "1 pizca",
         "medidaEstandar": "1 g",
         "presentacion": { "receta": { "cantidad": 1, "unidad": "pizca" }, "estandar": { "cantidad": 1, "unidad": "g" } },
-        "cantidades": { "A": 1, "B": null, "C": null, "D": null, "E": null }
+        "cantidades": { "A": 0.001, "B": null, "C": null, "D": null, "E": null }
       },
       {
         "nombre": "Esencia de vainilla",
@@ -405,9 +405,9 @@ window.RECETAS_INICIALES = [
         "cantidades": { "A": null, "B": 0.1, "C": null, "D": null, "E": null }
       },
       {
-        "nombre": "Yema de huevo",
+        "nombre": "Huevo",
         "unidad": "unidad",
-        "precioUnidad": null,
+        "precioUnidad": 277,
         "medidaReceta": "3 yemas",
         "medidaEstandar": "3 unidades",
         "presentacion": { "receta": { "cantidad": 3, "unidad": "yema" }, "estandar": { "cantidad": 3, "unidad": "unidad" } },
